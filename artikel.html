@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title id="pageTitle">Artikel — AMGPM Ranting Bethel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+    html{ scroll-behavior:smooth; }
+    body{ background:#f4f7fb; color:#1b1b1b; }
+    a{ text-decoration:none; color:inherit; }
+    img{ background:#e2e8f0; }
+
+    header{ background:white; box-shadow:0 2px 10px rgba(0,0,0,0.08); position:sticky; top:0; z-index:1000; }
+    .navbar{ width:90%; margin:auto; display:flex; justify-content:space-between; align-items:center; padding:18px 0; }
+    .logo{ display:flex; align-items:center; gap:20px; }
+    .logo img{ width:70px; height:70px; border-radius:100%; object-fit:cover; }
+    .logo-text h1{ font-size:20px; color:#003c8f; line-height:1.1; }
+    .logo-text p{ font-size:12px; color:#d4a017; font-weight:500; }
+    .back-link{ font-weight:600; color:#002060; }
+    .back-link:hover{ color:#d4a017; }
+
+    main{ width:90%; max-width:800px; margin:60px auto 100px; }
+    .artikel-image{ width:100%; max-height:420px; object-fit:cover; border-radius:20px; margin-bottom:35px; display:block; }
+    .artikel-date{ color:#d4a017; font-weight:600; font-size:14px; margin-bottom:10px; letter-spacing:0.5px; text-transform:uppercase; }
+    .artikel-title{ font-size:36px; color:#002060; line-height:1.2; margin-bottom:30px; }
+    .artikel-body p{ color:#444; line-height:1.9; font-size:17px; margin-bottom:22px; }
+
+    .not-found{ text-align:center; padding:80px 20px; }
+    .not-found h2{ color:#002060; margin-bottom:15px; }
+    .not-found p{ color:#666; margin-bottom:30px; }
+    .btn{ display:inline-block; background:#f4c542; color:#002060; padding:14px 32px; border-radius:40px; font-weight:600; transition:0.3s; }
+    .btn:hover{ background:#002060; color:white; }
+
+    footer{ background:#00173f; color:#ddd; text-align:center; padding:30px 10%; font-size:14px; }
+
+    @media(max-width:600px){
+      .artikel-title{ font-size:26px; }
+      .artikel-image{ max-height:260px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="navbar">
+      <div class="logo">
+        <img src="AM Logo.png" alt="Logo AMGPM Ranting Bethel">
+        <div class="logo-text">
+          <h1>AMGPM<br>Ranting Bethel</h1>
+          <p>KAMU ADALAH GARAM DAN TERANG DUNIA</p>
+        </div>
+      </div>
+      <a href="index.html#artikel" class="back-link">← Kembali ke Beranda</a>
+    </div>
+  </header>
+
+  <main id="artikelContainer">
+    <p style="text-align:center; color:#999; padding:60px 0;">Memuat artikel...</p>
+  </main>
+
+  <footer>© 2026 AMGPM Ranting Bethel. Semua Hak Dilindungi.</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function muatDetail() {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('slug');
+      const container = document.getElementById('artikelContainer');
+
+      if (!slug) {
+        tampilkanTidakDitemukan(container);
+        return;
+      }
+
+      const { data: artikel, error } = await supabaseClient
+        .from('articles')
+        .select('*')
+        .eq('slug', slug)
+        .single();
+
+      if (error || !artikel) {
+        tampilkanTidakDitemukan(container);
+        return;
+      }
+
+      document.title = artikel.title + ' — AMGPM Ranting Bethel';
+      document.getElementById('pageTitle').textContent = artikel.title + ' — AMGPM Ranting Bethel';
+
+      const tanggal = new Date(artikel.published_at).toLocaleDateString('id-ID', {
+        day: 'numeric', month: 'long', year: 'numeric'
+      });
+
+      const paragraf = (artikel.content || '')
+        .split('\n')
+        .filter(p => p.trim() !== '')
+        .map(p => `<p>${p}</p>`)
+        .join('');
+
+      container.innerHTML = `
+        <img class="artikel-image" src="${artikel.image || 'https://placehold.co/800x400?text=Tanpa+Gambar'}" alt="${artikel.title}">
+        <div class="artikel-date">${tanggal}</div>
+        <h1 class="artikel-title">${artikel.title}</h1>
+        <div class="artikel-body">${paragraf}</div>
+      `;
+
+      container.querySelector('img').addEventListener('error', function () {
+        this.onerror = null;
+        this.src = 'https://placehold.co/800x400?text=Gambar+Belum+Tersedia';
+      });
+    }
+
+    function tampilkanTidakDitemukan(container) {
+      container.innerHTML = `
+        <div class="not-found">
+          <h2>Artikel tidak ditemukan</h2>
+          <p>Artikel yang kamu cari mungkin sudah dihapus atau tautannya salah.</p>
+          <a href="index.html" class="btn">Kembali ke Beranda</a>
+        </div>
+      `;
+    }
+
+    muatDetail();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — AMGPM Ranting Bethel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+    body{ background:#f4f7fb; color:#1b1b1b; }
+
+    header{ background:#002060; color:white; padding:20px 6%; display:flex; justify-content:space-between; align-items:center; }
+    header h1{ font-size:20px; }
+    #logoutBtn{ background:#f4c542; color:#002060; border:none; padding:10px 20px; border-radius:30px; font-weight:600; cursor:pointer; display:none; }
+
+    main{ max-width:900px; margin:50px auto; padding:0 20px 80px; }
+
+    /* LOGIN */
+    #loginBox{ max-width:400px; margin:80px auto; background:white; padding:40px; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.08); }
+    #loginBox h2{ color:#002060; margin-bottom:25px; text-align:center; }
+    #loginBox label, #formArtikel label{ display:block; font-weight:600; margin:14px 0 6px; color:#333; font-size:14px; }
+    #loginBox input, #formArtikel input, #formArtikel textarea{
+      width:100%; padding:12px 14px; border:1px solid #ddd; border-radius:10px; font-family:inherit; font-size:15px;
+    }
+    #loginBox button, .primary-btn{
+      margin-top:22px; width:100%; background:#002060; color:white; border:none; padding:14px; border-radius:10px; font-weight:600; cursor:pointer; font-size:15px;
+    }
+    #loginBox button:hover, .primary-btn:hover{ background:#003c8f; }
+    #loginError{ color:#c0392b; margin-top:12px; font-size:14px; text-align:center; }
+
+    /* DASHBOARD */
+    #dashboard{ display:none; }
+
+    .panel{ background:white; border-radius:20px; padding:30px; box-shadow:0 5px 20px rgba(0,0,0,0.06); margin-bottom:40px; }
+    .panel h2{ color:#002060; margin-bottom:20px; font-size:22px; }
+
+    #formArtikel textarea{ min-height:160px; resize:vertical; }
+    .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .form-msg{ margin-top:14px; font-size:14px; }
+    .form-msg.success{ color:#1a7f37; }
+    .form-msg.error{ color:#c0392b; }
+
+    .artikel-list{ display:flex; flex-direction:column; gap:14px; }
+    .artikel-row{ display:flex; justify-content:space-between; align-items:center; padding:16px 20px; border:1px solid #eee; border-radius:14px; }
+    .artikel-row-title{ font-weight:600; color:#002060; }
+    .artikel-row-date{ font-size:13px; color:#999; }
+    .artikel-actions button{ border:none; padding:8px 16px; border-radius:8px; font-weight:600; cursor:pointer; margin-left:8px; font-size:13px; }
+    .edit-btn{ background:#eef3ff; color:#002060; }
+    .delete-btn{ background:#fdeaea; color:#c0392b; }
+
+    .cancel-edit{ background:none; border:1px solid #ccc; color:#666; padding:12px; border-radius:10px; margin-top:10px; width:100%; cursor:pointer; display:none; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Admin — AMGPM Ranting Bethel</h1>
+    <button id="logoutBtn">Keluar</button>
+  </header>
+
+  <main>
+
+    <!-- LOGIN -->
+    <div id="loginBox">
+      <h2>Masuk Admin</h2>
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="admin@email.com">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="••••••••">
+      <button id="loginBtn">Masuk</button>
+      <p id="loginError"></p>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard">
+
+      <div class="panel">
+        <h2 id="formTitle">Tambah Artikel Baru</h2>
+        <form id="formArtikel">
+          <label for="title">Judul Artikel</label>
+          <input type="text" id="title" required>
+
+          <div class="form-row">
+            <div>
+              <label for="slug">Slug (untuk link, otomatis)</label>
+              <input type="text" id="slug" required>
+            </div>
+            <div>
+              <label for="published_at">Tanggal Terbit</label>
+              <input type="date" id="published_at" required>
+            </div>
+          </div>
+
+          <label for="image">Link Gambar</label>
+          <input type="text" id="image" placeholder="https://... atau nama-file.jpg">
+
+          <label for="excerpt">Ringkasan Singkat (tampil di kartu depan)</label>
+          <input type="text" id="excerpt">
+
+          <label for="content">Isi Lengkap Artikel (satu paragraf per baris)</label>
+          <textarea id="content" required></textarea>
+
+          <button type="submit" class="primary-btn" id="submitBtn">Simpan Artikel</button>
+          <button type="button" class="cancel-edit" id="cancelEdit">Batal Edit</button>
+
+          <p class="form-msg" id="formMsg"></p>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Semua Artikel</h2>
+        <div class="artikel-list" id="artikelList">
+          <p style="color:#999;">Memuat...</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script>
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const loginBox = document.getElementById('loginBox');
+    const dashboard = document.getElementById('dashboard');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginError = document.getElementById('loginError');
+
+    let editingSlug = null; // null = mode tambah baru, terisi = mode edit
+
+    // ---------- LOGIN ----------
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      loginError.textContent = '';
+
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) {
+        loginError.textContent = 'Email atau password salah.';
+        return;
+      }
+      tampilkanDashboard();
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      dashboard.style.display = 'none';
+      logoutBtn.style.display = 'none';
+      loginBox.style.display = 'block';
+    });
+
+    async function cekSesiLogin() {
+      const { data } = await supabaseClient.auth.getSession();
+      if (data.session) {
+        tampilkanDashboard();
+      }
+    }
+
+    function tampilkanDashboard() {
+      loginBox.style.display = 'none';
+      dashboard.style.display = 'block';
+      logoutBtn.style.display = 'inline-block';
+      document.getElementById('published_at').valueAsDate = new Date();
+      muatDaftarArtikel();
+    }
+
+    // ---------- SLUG OTOMATIS DARI JUDUL ----------
+    document.getElementById('title').addEventListener('input', (e) => {
+      if (editingSlug) return; // jangan ubah slug otomatis saat mode edit
+      const slug = e.target.value
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+      document.getElementById('slug').value = slug;
+    });
+
+    // ---------- SIMPAN (TAMBAH / EDIT) ----------
+    document.getElementById('formArtikel').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formMsg = document.getElementById('formMsg');
+      formMsg.textContent = '';
+      formMsg.className = 'form-msg';
+
+      const payload = {
+        title: document.getElementById('title').value.trim(),
+        slug: document.getElementById('slug').value.trim(),
+        published_at: document.getElementById('published_at').value,
+        image: document.getElementById('image').value.trim(),
+        excerpt: document.getElementById('excerpt').value.trim(),
+        content: document.getElementById('content').value.trim()
+      };
+
+      let error;
+      if (editingSlug) {
+        ({ error } = await supabaseClient.from('articles').update(payload).eq('slug', editingSlug));
+      } else {
+        ({ error } = await supabaseClient.from('articles').insert([payload]));
+      }
+
+      if (error) {
+        formMsg.textContent = 'Gagal menyimpan: ' + error.message;
+        formMsg.classList.add('error');
+        return;
+      }
+
+      formMsg.textContent = 'Artikel berhasil disimpan dan langsung tayang di beranda.';
+      formMsg.classList.add('success');
+      resetForm();
+      muatDaftarArtikel();
+    });
+
+    document.getElementById('cancelEdit').addEventListener('click', resetForm);
+
+    function resetForm() {
+      editingSlug = null;
+      document.getElementById('formArtikel').reset();
+      document.getElementById('published_at').valueAsDate = new Date();
+      document.getElementById('formTitle').textContent = 'Tambah Artikel Baru';
+      document.getElementById('submitBtn').textContent = 'Simpan Artikel';
+      document.getElementById('cancelEdit').style.display = 'none';
+      document.getElementById('slug').removeAttribute('readonly');
+    }
+
+    // ---------- DAFTAR ARTIKEL ----------
+    async function muatDaftarArtikel() {
+      const list = document.getElementById('artikelList');
+      const { data, error } = await supabaseClient
+        .from('articles')
+        .select('*')
+        .order('published_at', { ascending: false });
+
+      if (error) {
+        list.innerHTML = '<p style="color:#c0392b;">Gagal memuat daftar artikel.</p>';
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        list.innerHTML = '<p style="color:#999;">Belum ada artikel.</p>';
+        return;
+      }
+
+      list.innerHTML = data.map(a => `
+        <div class="artikel-row">
+          <div>
+            <div class="artikel-row-title">${a.title}</div>
+            <div class="artikel-row-date">${new Date(a.published_at).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })}</div>
+          </div>
+          <div class="artikel-actions">
+            <button class="edit-btn" data-slug="${a.slug}">Edit</button>
+            <button class="delete-btn" data-slug="${a.slug}">Hapus</button>
+          </div>
+        </div>
+      `).join('');
+
+      list.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => mulaiEdit(btn.dataset.slug, data));
+      });
+      list.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', () => hapusArtikel(btn.dataset.slug));
+      });
+    }
+
+    function mulaiEdit(slug, data) {
+      const artikel = data.find(a => a.slug === slug);
+      if (!artikel) return;
+
+      editingSlug = slug;
+      document.getElementById('title').value = artikel.title;
+      document.getElementById('slug').value = artikel.slug;
+      document.getElementById('slug').setAttribute('readonly', true);
+      document.getElementById('published_at').value = artikel.published_at;
+      document.getElementById('image').value = artikel.image || '';
+      document.getElementById('excerpt').value = artikel.excerpt || '';
+      document.getElementById('content').value = artikel.content || '';
+
+      document.getElementById('formTitle').textContent = 'Edit Artikel: ' + artikel.title;
+      document.getElementById('submitBtn').textContent = 'Simpan Perubahan';
+      document.getElementById('cancelEdit').style.display = 'block';
+
+      document.getElementById('formArtikel').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function hapusArtikel(slug) {
+      if (!confirm('Yakin mau menghapus artikel ini? Tindakan ini tidak bisa dibatalkan.')) return;
+      const { error } = await supabaseClient.from('articles').delete().eq('slug', slug);
+      if (error) {
+        alert('Gagal menghapus: ' + error.message);
+        return;
+      }
+      muatDaftarArtikel();
+    }
+
+    cekSesiLogin();
+  </script>
+
+</body>
+</html>
