@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profil Pengurus — AMGPM Ranting Bethel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+    html{ scroll-behavior:smooth; }
+    body{ background:#f4f7fb; color:#1b1b1b; }
+    a{ text-decoration:none; color:inherit; }
+    img{ background:#e2e8f0; }
+
+    header{ background:white; box-shadow:0 2px 10px rgba(0,0,0,0.08); position:sticky; top:0; z-index:1000; }
+    .navbar{ width:90%; margin:auto; display:flex; justify-content:space-between; align-items:center; padding:18px 0; }
+    .logo{ display:flex; align-items:center; gap:20px; }
+    .logo img{ width:70px; height:70px; border-radius:100%; object-fit:cover; }
+    .logo-text h1{ font-size:20px; color:#003c8f; line-height:1.1; }
+    .logo-text p{ font-size:12px; color:#d4a017; font-weight:500; }
+    .back-link{ font-weight:600; color:#002060; }
+    .back-link:hover{ color:#d4a017; }
+
+    main{ width:90%; max-width:1100px; margin:60px auto 100px; }
+
+    .page-title{ font-size:38px; color:#002060; margin-bottom:15px; text-align:center; }
+    .page-subtitle{ color:#666; margin-bottom:50px; text-align:center; }
+
+    .pengurus-group{ margin-bottom:60px; }
+    .pengurus-group:last-child{ margin-bottom:0; }
+    .group-title{
+      font-size:22px; color:#002060; font-weight:600; margin-bottom:25px;
+      padding-bottom:12px; border-bottom:2px solid #f4c542; display:inline-block;
+    }
+
+    .pengurus-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:30px; }
+    .pengurus-card{ background:white; border-radius:20px; padding:30px 20px; text-align:center; box-shadow:0 5px 20px rgba(0,0,0,0.06); transition:0.3s; }
+    .pengurus-card:hover{ transform:translateY(-8px); }
+    .pengurus-avatar{
+      width:110px; height:110px; border-radius:50%; margin:0 auto 20px;
+      display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(135deg,#002060,#003c8f);
+      color:#f4c542; font-size:32px; font-weight:700; overflow:hidden;
+    }
+    .pengurus-avatar img{ width:100%; height:100%; object-fit:cover; }
+    .pengurus-name{ color:#002060; font-size:18px; font-weight:600; margin-bottom:6px; }
+    .pengurus-role{ color:#d4a017; font-weight:600; font-size:14px; text-transform:uppercase; letter-spacing:0.5px; }
+
+    footer{ background:#00173f; color:#ddd; text-align:center; padding:30px 10%; font-size:14px; }
+
+    @media(max-width:600px){
+      .page-title{ font-size:28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="navbar">
+      <div class="logo">
+        <img src="AM Logo.png" alt="Logo AMGPM Ranting Bethel">
+        <div class="logo-text">
+          <h1>AMGPM<br>Ranting Bethel</h1>
+          <p>KAMU ADALAH GARAM DAN TERANG DUNIA</p>
+        </div>
+      </div>
+      <a href="index.html" class="back-link">← Kembali ke Beranda</a>
+    </div>
+  </header>
+
+  <main>
+    <h1 class="page-title">Profil Pengurus</h1>
+    <p class="page-subtitle">Pengurus AMGPM Ranting Bethel periode berjalan</p>
+
+    <div class="pengurus-group">
+      <h2 class="group-title">Pimpinan Ranting</h2>
+      <div class="pengurus-grid">
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">KR</div>
+          <div class="pengurus-name">Nama Ketua Ranting</div>
+          <div class="pengurus-role">Ketua Ranting</div>
+        </div>
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">SR</div>
+          <div class="pengurus-name">Nama Sekretaris Ranting</div>
+          <div class="pengurus-role">Sekretaris Ranting</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pengurus-group">
+      <h2 class="group-title">Bendahara</h2>
+      <div class="pengurus-grid">
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">BR</div>
+          <div class="pengurus-name">Nama Bendahara Ranting</div>
+          <div class="pengurus-role">Bendahara Ranting</div>
+        </div>
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">B1</div>
+          <div class="pengurus-name">Nama Bendahara 1</div>
+          <div class="pengurus-role">Bendahara 1</div>
+        </div>
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">B2</div>
+          <div class="pengurus-name">Nama Bendahara 2</div>
+          <div class="pengurus-role">Bendahara 2</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pengurus-group">
+      <h2 class="group-title">Bidang I</h2>
+      <div class="pengurus-grid">
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">KB</div>
+          <div class="pengurus-name">Nama Ketua Bidang I</div>
+          <div class="pengurus-role">Ketua Bidang I</div>
+        </div>
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">SB</div>
+          <div class="pengurus-name">Nama Sekretaris Bidang I</div>
+          <div class="pengurus-role">Sekretaris Bidang I</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pengurus-group">
+      <h2 class="group-title">Bidang II</h2>
+      <div class="pengurus-grid">
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">KB</div>
+          <div class="pengurus-name">Nama Ketua Bidang II</div>
+          <div class="pengurus-role">Ketua Bidang II</div>
+        </div>
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">SB</div>
+          <div class="pengurus-name">Nama Sekretaris Bidang II</div>
+          <div class="pengurus-role">Sekretaris Bidang II</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pengurus-group">
+      <h2 class="group-title">Bidang III</h2>
+      <div class="pengurus-grid">
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">KB</div>
+          <div class="pengurus-name">Nama Ketua Bidang III</div>
+          <div class="pengurus-role">Ketua Bidang III</div>
+        </div>
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">SB</div>
+          <div class="pengurus-name">Nama Sekretaris Bidang III</div>
+          <div class="pengurus-role">Sekretaris Bidang III</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pengurus-group">
+      <h2 class="group-title">Bidang IV</h2>
+      <div class="pengurus-grid">
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">KB</div>
+          <div class="pengurus-name">Nama Ketua Bidang IV</div>
+          <div class="pengurus-role">Ketua Bidang IV</div>
+        </div>
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">SB</div>
+          <div class="pengurus-name">Nama Sekretaris Bidang IV</div>
+          <div class="pengurus-role">Sekretaris Bidang IV</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pengurus-group">
+      <h2 class="group-title">Bidang V</h2>
+      <div class="pengurus-grid">
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">KB</div>
+          <div class="pengurus-name">Nama Ketua Bidang V</div>
+          <div class="pengurus-role">Ketua Bidang V</div>
+        </div>
+        <div class="pengurus-card">
+          <div class="pengurus-avatar">SB</div>
+          <div class="pengurus-name">Nama Sekretaris Bidang V</div>
+          <div class="pengurus-role">Sekretaris Bidang V</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>© 2026 AMGPM Ranting Bethel. Semua Hak Dilindungi.</footer>
+
+</body>
+</html>
