@@ -13,5 +13,5 @@
    setelah itu.
    ========================================================= */
 
-const SUPABASE_URL = "https://ualjyhvhpqvbcsvpsbgx.supabase.co/rest/v1/";
+const SUPABASE_URL = "https://ualjyhvhpqvbcsvpsbgx.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_GjOqjd4rVjUANK3HfvzZ2w_5zccvS--";
